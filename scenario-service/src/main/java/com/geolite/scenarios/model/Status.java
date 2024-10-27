@@ -7,5 +7,9 @@ public enum Status {
     CANCELLED,
     DELETED,
     ON_HOLD,
-    ACTIVE
+    ACTIVE;
+
+    public static Status fromString(String status) {
+        return Status.valueOf(status.toUpperCase());
+    }
 }

@@ -1,23 +1,23 @@
 {
+  "namespace": "com.geolite.scenarios.event",
   "type": "record",
   "name": "ScenarioCreatedEvent",
   "fields": [
     {
       "name": "eventId",
-      "type": "string",  // Changed from logicalType "uuid"
+      "type": "string"  // Changed from logicalType "uuid"
     },
     {
       "name": "timestamp",
-      "type": "long",  // Inherited from Event
-      "logicalType": "timestamp-millis"
+      "type": "long"
     },
     {
       "name": "scenarioId",
-      "type": "string",  // Changed from logicalType "uuid"
+      "type": "string"  // Changed from logicalType "uuid"
     },
     {
       "name": "projectId",
-      "type": "string",  // Changed from logicalType "uuid"
+      "type": "string"  // Changed from logicalType "uuid"
     },
     {
       "name": "scenarioName",
@@ -33,8 +33,7 @@
     },
     {
       "name": "budget",
-      "type": "bytes",  // Using bytes for BigDecimal
-      "logicalType": "decimal",
+      "type": "bytes",
       "precision": 10,
       "scale": 2
     },
@@ -44,8 +43,7 @@
     },
     {
       "name": "createdDate",
-      "type": "long",  // Timestamp represented as long (milliseconds since epoch)
-      "logicalType": "timestamp-millis"
+      "type": "long"
     }
   ]
 }

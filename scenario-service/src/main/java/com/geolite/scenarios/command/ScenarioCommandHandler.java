@@ -5,6 +5,7 @@ import com.geolite.scenarios.model.Scenario;
 import com.geolite.scenarios.repository.ProjectReadModelRepository;
 import com.geolite.scenarios.repository.ScenarioRepository;
 import com.geolite.scenarios.eventstore.EventStore;
+import com.geolite.scenarios.util.ConversionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -48,15 +49,18 @@ public class ScenarioCommandHandler {
         }
 
         UUID scenarioId = UUID.randomUUID();
+        UUID eventId = UUID.randomUUID();
         ScenarioCreatedEvent event = new ScenarioCreatedEvent(
-                scenarioId,
-                command.getProjectId(),
+                eventId.toString(),
+                Timestamp.from(Instant.now()).getTime(),
+                scenarioId.toString(),
+                command.getProjectId().toString(),
                 command.getScenarioName(),
                 command.getTarget(),
                 command.getMethods(),
-                command.getBudget(),
+                ConversionUtil.bigDecimalToByteBuffer(command.getBudget()),
                 command.getCreatedBy(),
-                Timestamp.from(Instant.now())
+                Timestamp.from(Instant.now()).getTime()
         );
 
         eventStore.saveEvent(event);
@@ -80,14 +84,17 @@ public class ScenarioCommandHandler {
         Objects.requireNonNull(command.getBudget(), "Budget is required");
         Objects.requireNonNull(command.getModifiedBy(), "Modified by is required");
 
+        UUID eventId = UUID.randomUUID();
         ScenarioUpdatedEvent event = new ScenarioUpdatedEvent(
-                command.getScenarioId(),
+                eventId.toString(),
+                Timestamp.from(Instant.now()).getTime(),
+                command.getScenarioId().toString(),
                 command.getScenarioName(),
                 command.getTarget(),
                 command.getMethods(),
-                command.getBudget(),
+                ConversionUtil.bigDecimalToByteBuffer(command.getBudget()),
                 command.getModifiedBy(),
-                Timestamp.from(Instant.now())
+                Timestamp.from(Instant.now()).getTime()
         );
 
         eventStore.saveEvent(event);
@@ -100,7 +107,7 @@ public class ScenarioCommandHandler {
     public void handleDeleteScenario(DeleteScenarioCommand command) {
         Scenario scenario = scenarioRepository.findById(command.getScenarioId())
                 .orElseThrow(() -> new RuntimeException("Scenario not found"));
-        ScenarioDeletedEvent event = new ScenarioDeletedEvent(scenario.getScenarioId());
+        ScenarioDeletedEvent event = new ScenarioDeletedEvent(UUID.randomUUID().toString(), Timestamp.from(Instant.now()).getTime(), scenario.getScenarioId().toString());
 
         eventStore.saveEvent(event);
         publishEvent("scenario-deleted", event);
@@ -108,27 +115,28 @@ public class ScenarioCommandHandler {
         scenarioRepository.deleteById(command.getScenarioId());
     }
 
-    private void applyEvent(Scenario scenario, Event event) {
+    private void applyEvent(Scenario scenario, Object event) {
         if (event instanceof ScenarioCreatedEvent createdEvent) {
-            scenario.setProjectId(createdEvent.getProjectId());
-            scenario.setScenarioName(createdEvent.getScenarioName());
-            scenario.setTarget(createdEvent.getTarget());
-            scenario.setMethods(createdEvent.getMethods());
-            scenario.setBudget(createdEvent.getBudget());
-            scenario.setCreatedBy(createdEvent.getCreatedBy());
-            scenario.setCreatedDate(createdEvent.getCreatedDate());
+            scenario.setProjectId(UUID.fromString(createdEvent.getProjectId().toString()));
+            scenario.setScenarioName(createdEvent.getScenarioName().toString());
+            scenario.setTarget(createdEvent.getTarget().toString());
+            scenario.setMethods(createdEvent.getMethods().toString());
+            scenario.setBudget(ConversionUtil.byteBufferToBigDecimal(createdEvent.getBudget()));
+            scenario.setCreatedBy(createdEvent.getCreatedBy().toString());
+            scenario.setCreatedDate(ConversionUtil.longToTimestamp(createdEvent.getCreatedDate()));
         } else if (event instanceof ScenarioUpdatedEvent updatedEvent) {
-            scenario.setScenarioId(updatedEvent.getScenarioId());
-            scenario.setScenarioName(updatedEvent.getScenarioName());
-            scenario.setTarget(updatedEvent.getTarget());
-            scenario.setMethods(updatedEvent.getMethods());
-            scenario.setBudget(updatedEvent.getBudget());
-            scenario.setModifiedBy(updatedEvent.getModifiedBy());
-            scenario.setModifiedDate(updatedEvent.getModifiedDate());
+            scenario.setScenarioId(UUID.fromString(updatedEvent.getScenarioId().toString()));
+            scenario.setScenarioName(updatedEvent.getScenarioName().toString());
+            scenario.setTarget(updatedEvent.getTarget().toString());
+            scenario.setMethods(updatedEvent.getMethods().toString());
+            scenario.setBudget(ConversionUtil.byteBufferToBigDecimal(updatedEvent.getBudget()));
+            scenario.setModifiedBy(updatedEvent.getModifiedBy().toString());
+            scenario.setModifiedDate(ConversionUtil.longToTimestamp(updatedEvent.getModifiedDate()));
         }
     }
 
-    private void publishEvent(String topic, Event event) {
+    private void publishEvent(String topic, Object event) {
+        log.info("Publishing event: {}", event.toString());
         kafkaTemplate.send(topic, event);
     }
 }

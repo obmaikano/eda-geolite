@@ -1,7 +1,10 @@
 package com.geolite.scenarios.util;
 
-import com.geolite.projects.model.Status;
+import com.geolite.scenarios.model.Status;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -52,5 +55,39 @@ public class ConversionUtil {
             throw new IllegalArgumentException("Status string cannot be null or empty");
         }
         return Status.fromString(statusString); // Convert string to enum
+    }
+
+    public static ByteBuffer bigDecimalToByteBuffer(BigDecimal bigDecimal) {
+        // Convert BigDecimal's BigInteger component and scale separately
+        BigInteger unscaledValue = bigDecimal.unscaledValue();
+        int scale = bigDecimal.scale();
+
+        // Convert BigInteger to a byte array
+        byte[] unscaledBytes = unscaledValue.toByteArray();
+
+        // Allocate a ByteBuffer with enough space to hold the scale (4 bytes) and unscaled value
+        ByteBuffer buffer = ByteBuffer.allocate(4 + unscaledBytes.length);
+
+        // Put scale and unscaled value bytes into the buffer
+        buffer.putInt(scale);
+        buffer.put(unscaledBytes);
+
+        // Flip the buffer to prepare for reading
+        buffer.flip();
+
+        return buffer;
+    }
+
+    public static BigDecimal byteBufferToBigDecimal(ByteBuffer budget) {
+        // Read scale and unscaled value bytes from the buffer
+        int scale = budget.getInt();
+        byte[] unscaledBytes = new byte[budget.remaining()];
+        budget.get(unscaledBytes);
+
+        // Convert the byte array to a BigInteger
+        BigInteger unscaledValue = new BigInteger(unscaledBytes);
+
+        // Convert the BigInteger to a BigDecimal
+        return new BigDecimal(unscaledValue, scale);
     }
 }

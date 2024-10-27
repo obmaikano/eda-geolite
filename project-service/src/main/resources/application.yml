@@ -38,7 +38,11 @@ spring:
           value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
           properties:
             spring.json.trusted.packages: "*"  # Adjust based on package structure if needed
-
+      rabbit:
+        binder:
+          nodes:
+            default:
+              port: 5672
     redis:
       host: localhost
       port: 6379

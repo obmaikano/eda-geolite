@@ -1,4 +1,5 @@
 {
+  "namespace": "com.geolite.scenarios.event",
   "type": "record",
   "name": "ScenarioUpdatedEvent",
   "fields": [
@@ -8,8 +9,7 @@
     },
     {
       "name": "timestamp",
-      "type": "long",  // Inherited from Event
-      "logicalType": "timestamp-millis"
+      "type": "long"
     },
     {
       "name": "scenarioId",
@@ -29,8 +29,7 @@
     },
     {
       "name": "budget",
-      "type": "bytes",  // Using bytes for BigDecimal
-      "logicalType": "decimal",
+      "type": "bytes",
       "precision": 10,
       "scale": 2
     },
@@ -40,8 +39,7 @@
     },
     {
       "name": "modifiedDate",
-      "type": "long",  // Timestamp represented as long (milliseconds since epoch)
-      "logicalType": "timestamp-millis"
+      "type": "long"
     }
   ]
 }

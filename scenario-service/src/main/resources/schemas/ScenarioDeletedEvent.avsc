@@ -1,15 +1,15 @@
 {
+  "namespace": "com.geolite.scenarios.event",
   "type": "record",
   "name": "ScenarioDeletedEvent",
   "fields": [
     {
       "name": "eventId",
-      "type": "string",  // Changed from logicalType "uuid"
+      "type": "string"  // Changed from logicalType "uuid"
     },
     {
       "name": "timestamp",
-      "type": "long",  // Inherited from Event
-      "logicalType": "timestamp-millis"
+      "type": "long"
     },
     {
       "name": "scenarioId",

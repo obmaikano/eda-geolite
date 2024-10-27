@@ -36,6 +36,8 @@ spring:
           contentType: application/json
       kafka:
         bootstrap-servers: localhost:9092
+        properties:
+          schema.registry.url: http://localhost:18081  # Required for Avro serialization
         streams:
           application-id: scenario-streams
         producer:

@@ -5,7 +5,10 @@ import com.geolite.scenarios.event.ScenarioUpdatedEvent;
 import com.geolite.scenarios.event.ScenarioDeletedEvent;
 import com.geolite.scenarios.model.Scenario;
 import com.geolite.scenarios.repository.ScenarioRepository;
+import com.geolite.scenarios.util.ConversionUtil;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -39,12 +42,12 @@ public class ConsistencyService {
     private void handleScenarioCreated(ScenarioCreatedEvent event) {
         Scenario scenario = new Scenario();
         updateScenarioFromEvent(scenario, event);
-        scenario.setScenarioId(event.getScenarioId());
+        scenario.setScenarioId(UUID.fromString(event.getScenarioId().toString()));
         scenarioRepository.save(scenario);
     }
 
     private void handleScenarioUpdated(ScenarioUpdatedEvent event) {
-        scenarioRepository.findById(event.getScenarioId())
+        scenarioRepository.findById(UUID.fromString(event.getScenarioId().toString()))
                 .ifPresent(scenario -> {
                     updateScenarioFromEvent(scenario, event);
                     scenarioRepository.save(scenario);
@@ -52,27 +55,27 @@ public class ConsistencyService {
     }
 
     private void handleScenarioDeleted(ScenarioDeletedEvent event) {
-        scenarioRepository.deleteById(event.getScenarioId());
+        scenarioRepository.deleteById(UUID.fromString(event.getScenarioId().toString()));
     }
 
     private void updateScenarioFromEvent(Scenario scenario, ScenarioCreatedEvent event) {
-        scenario.setScenarioId(event.getScenarioId());
-        scenario.setProjectId(event.getProjectId());
-        scenario.setScenarioName(event.getScenarioName());
-        scenario.setTarget(event.getTarget());
-        scenario.setMethods(event.getMethods());
-        scenario.setBudget(event.getBudget());
-        scenario.setCreatedBy(event.getCreatedBy());
-        scenario.setCreatedDate(event.getCreatedDate());
+        scenario.setScenarioId(UUID.fromString(event.getScenarioId().toString()));
+        scenario.setProjectId(UUID.fromString(event.getProjectId().toString()));
+        scenario.setScenarioName(event.getScenarioName().toString());
+        scenario.setTarget(event.getTarget().toString());
+        scenario.setMethods(event.getMethods().toString());
+        scenario.setBudget(ConversionUtil.byteBufferToBigDecimal(event.getBudget()));
+        scenario.setCreatedBy(event.getCreatedBy().toString());
+        scenario.setCreatedDate(ConversionUtil.longToTimestamp(event.getCreatedDate()));
     }
 
     private void updateScenarioFromEvent(Scenario scenario, ScenarioUpdatedEvent event) {
         // Update only the fields that are present in the UpdatedEvent
-        if (event.getScenarioName() != null) scenario.setScenarioName(event.getScenarioName());
-        if (event.getTarget() != null) scenario.setTarget(event.getTarget());
-        if (event.getMethods() != null) scenario.setMethods(event.getMethods());
-        if (event.getBudget() != null) scenario.setBudget(event.getBudget());
-        scenario.setModifiedBy(event.getModifiedBy());
-        scenario.setModifiedDate(event.getModifiedDate());
+        if (event.getScenarioName() != null) scenario.setScenarioName(event.getScenarioName().toString());
+        if (event.getTarget() != null) scenario.setTarget(event.getTarget().toString());
+        if (event.getMethods() != null) scenario.setMethods(event.getMethods().toString());
+        if (event.getBudget() != null) scenario.setBudget(ConversionUtil.byteBufferToBigDecimal(event.getBudget()));
+        scenario.setModifiedBy(event.getModifiedBy().toString());
+        scenario.setModifiedDate(ConversionUtil.longToTimestamp(event.getModifiedDate()));
     }
 }
