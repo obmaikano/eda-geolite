@@ -1,0 +1,39 @@
+# Java class files
+*.class
+
+# Log files
+*.log
+
+# Maven target directory
+/target/
+
+# Gradle build directory
+/build/
+
+# IDE specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse specific files
+.classpath
+.project
+.settings/
+
+# IntelliJ specific files
+out/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Local configuration files
+*.local.properties
+*.env
+
+# Other files to ignore
+*.jar
+*.war
+*.ear
+
