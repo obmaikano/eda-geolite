@@ -20,6 +20,22 @@ import java.util.Map;
 @EnableKafkaStreams
 public class KafkaStreamsConfig {
 
+    /**
+     * A Spring Bean definition for the default Kafka Streams configuration.
+     *
+     * <p>This configuration is used by the {@link KafkaStreams} instance created by the
+     * {@link EnableKafkaStreams @EnableKafkaStreams} annotation.
+     *
+     * <p>The configuration is supplied with the following properties:
+     * <ul>
+     * <li>{@link StreamsConfig#APPLICATION_ID_CONFIG application.id}: {@code "project-streams"}
+     * <li>{@link StreamsConfig#BOOTSTRAP_SERVERS_CONFIG bootstrap.servers}: {@code "localhost:9092"}
+     * <li>{@link StreamsConfig#DEFAULT_KEY_SERDE_CLASS_CONFIG default.key.serde}: {@link Serdes#String() String}
+     * <li>{@link StreamsConfig#DEFAULT_VALUE_SERDE_CLASS_CONFIG default.value.serde}: {@link SpecificAvroSerde}
+     * <li>{@link KafkaAvroDeserializerConfig#SCHEMA_REGISTRY_URL_CONFIG schema.registry.url}: {@code "http://localhost:18081"}
+     * </ul>
+     *
+     **/
     @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
     public KafkaStreamsConfiguration kStreamsConfig() {
         Map<String, Object> props = new HashMap<>();

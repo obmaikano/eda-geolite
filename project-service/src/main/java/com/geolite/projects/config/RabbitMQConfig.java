@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+
     @Bean
     public Queue createProjectQueue() {
         return new Queue("create-project-queue", true);

@@ -24,6 +24,14 @@ import java.util.Map;
 @EnableKafkaStreams
 public class KafkaConfig {
 
+    /**
+     * This function creates a Kafka producer factory which is able to send messages
+     * with String keys and Avro serialized values. The factory is configured to talk
+     * to the Kafka broker at localhost:9092 and the Confluent schema registry at
+     * http://localhost:18081.
+     *
+     * @return a Kafka producer factory
+     */
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
@@ -39,6 +47,15 @@ public class KafkaConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
+    /**
+     * This function creates a Kafka consumer factory which is able to receive messages
+     * with String keys and Avro serialized values. The factory is configured to talk
+     * to the Kafka broker at localhost:9092 and the Confluent schema registry at
+     * http://localhost:18081. The consumer is also configured to use the
+     * {@link KafkaAvroDeserializer} with the specific Avro reader enabled.
+     *
+     * @return a Kafka consumer factory
+     */
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
