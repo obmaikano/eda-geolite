@@ -1,0 +1,51 @@
+{
+  "type": "record",
+  "name": "ScenarioCreatedEvent",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",  // Inherited from Event
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "scenarioId",
+      "type": "string",  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "projectId",
+      "type": "string",  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "scenarioName",
+      "type": "string"
+    },
+    {
+      "name": "target",
+      "type": "string"
+    },
+    {
+      "name": "methods",
+      "type": "string"
+    },
+    {
+      "name": "budget",
+      "type": "bytes",  // Using bytes for BigDecimal
+      "logicalType": "decimal",
+      "precision": 10,
+      "scale": 2
+    },
+    {
+      "name": "createdBy",
+      "type": "string"
+    },
+    {
+      "name": "createdDate",
+      "type": "long",  // Timestamp represented as long (milliseconds since epoch)
+      "logicalType": "timestamp-millis"
+    }
+  ]
+}

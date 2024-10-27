@@ -1,0 +1,65 @@
+{
+  "type": "record",
+  "name": "DrillingStartedEvent",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",  // Inherited from Event
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "holeId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "projectId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "scenarioId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "holeName",
+      "type": "string"
+    },
+    {
+      "name": "collarEasting",
+      "type": "double"
+    },
+    {
+      "name": "collarNorthing",
+      "type": "double"
+    },
+    {
+      "name": "depth",
+      "type": "double"
+    },
+    {
+      "name": "status",
+      "type": {
+        "type": "enum",
+        "name": "Status",
+        "symbols": ["STARTED", "IN_PROGRESS", "COMPLETED"]
+      }
+    },
+    {
+      "name": "startTime",
+      "type": "long",  // Changed from logicalType "timestamp-millis"
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "createdBy",
+      "type": "string"
+    },
+    {
+      "name": "createdDate",
+      "type": "long",  // Changed from logicalType "timestamp-millis"
+      "logicalType": "timestamp-millis"
+    }
+  ]
+}

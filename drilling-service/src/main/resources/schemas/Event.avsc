@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "Event",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",  // Instant can be represented as a long (milliseconds since epoch)
+      "logicalType": "timestamp-millis"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "ScenarioDeletedEvent",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",  // Inherited from Event
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "scenarioId",
+      "type": "string"  // Changed from logicalType "uuid"
+    }
+  ]
+}

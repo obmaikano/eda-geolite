@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/geo_project_db
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:geolite_dba}
+    password: ${DB_PASSWORD:geo_pass}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: false  # Disable the H2 console as it's no longer needed
+
+  cloud:
+    stream:
+      bindings:
+        projectCreated:
+          destination: project-created
+          contentType: application/json
+        projectUpdated:
+          destination: project-updated
+          contentType: application/json
+        projectDeleted:
+          destination: project-deleted
+          contentType: application/json
+      kafka:
+        bootstrap-servers: localhost:9092
+        properties:
+          schema.registry.url: http://localhost:18081  # Required for Avro serialization
+        streams:
+          application-id: project-streams
+        producer:
+          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+          value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+        consumer:
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+          properties:
+            spring.json.trusted.packages: "*"  # Adjust based on package structure if needed
+
+    redis:
+      host: localhost
+      port: 6379
+      # Uncomment if using Redis for caching
+      # cache:
+      #   type: redis

@@ -1,0 +1,56 @@
+{
+  "type": "record",
+  "name": "DrillingUpdatedEvent",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",  // Inherited from Event
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "holeId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "projectId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "scenarioId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "holeName",
+      "type": "string"
+    },
+    {
+      "name": "collarEasting",
+      "type": "double"
+    },
+    {
+      "name": "collarNorthing",
+      "type": "double"
+    },
+    {
+      "name": "depth",
+      "type": "double"
+    },
+    {
+      "name": "status",
+      "type": "string"  // Assuming Status is represented as a string
+    },
+    {
+      "name": "modifiedBy",
+      "type": "string"
+    },
+    {
+      "name": "modifiedDate",
+      "type": "long",  // Timestamp represented as long (milliseconds since epoch)
+      "logicalType": "timestamp-millis"
+    }
+  ]
+}

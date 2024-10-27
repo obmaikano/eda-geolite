@@ -1,0 +1,19 @@
+{
+  "namespace": "com.geolite.projects.event",
+  "type": "record",
+  "name": "ProjectCreatedEvent",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "timestamp", "type": "long" },
+    { "name": "projectId", "type": "string" },
+    { "name": "projectName", "type": "string" },
+    { "name": "location", "type": "string" },
+    { "name": "commodity", "type": "string" },
+    { "name": "startDate", "type": "long" },
+    { "name": "endDate", "type": "long" },
+    { "name": "description", "type": "string" },
+    { "name": "projectLead", "type": "string" },
+    { "name": "createdBy", "type": "string" },
+    { "name": "createdDate", "type": "long" }
+  ]
+}

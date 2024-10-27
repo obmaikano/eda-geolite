@@ -1,0 +1,10 @@
+{
+  "namespace": "com.geolite.projects.event",
+  "type": "record",
+  "name": "ProjectDeletedEvent",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "timestamp", "type": "long" },
+    { "name": "projectId", "type": "string" }
+  ]
+}

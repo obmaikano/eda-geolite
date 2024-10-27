@@ -1,0 +1,59 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/geo_scenario_db
+    driver-class-name: org.postgresql.Driver
+    username: geolite_dba
+    password: geo_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: false  # Disable the H2 console as it's no longer needed
+
+  # Configure Spring Cloud Stream (example for RabbitMQ)
+  cloud:
+    stream:
+      bindings:
+        scenarioCreated:
+          destination: scenario-created
+          contentType: application/json
+        scenarioUpdated:
+          destination: scenario-updated
+          contentType: application/json
+        scenarioDeleted:
+          destination: scenario-deleted
+          contentType: application/json
+        projectCreated:
+          destination: project-created
+          contentType: application/json
+        projectUpdated:
+          destination: project-updated
+          contentType: application/json
+        projectDeleted:
+          destination: project-deleted
+          contentType: application/json
+      kafka:
+        bootstrap-servers: localhost:9092
+        streams:
+          application-id: scenario-streams
+        producer:
+          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+          value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+        consumer:
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+          properties:
+            spring.json.trusted.packages: "*"
+      rabbit:
+        binder:
+          nodes:
+            default:
+              port: 5672
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8383

@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "DrillingDeletedEvent",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"  // Changed from logicalType "uuid"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",  // Inherited from Event
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "holeId",
+      "type": "string"  // UUID represented as a string
+    }
+  ]
+}
