@@ -6,13 +6,11 @@ import com.geolite.projects.event.ProjectCreatedEvent;
 import com.geolite.projects.event.ProjectUpdatedEvent;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import lombok.extern.slf4j.Slf4j;
-//import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -75,6 +73,8 @@ public class ProjectStreamProcessor {
                 }
             });
 
+            // Build the topology
+            streamsBuilder.build();
             log.info("Kafka Streams topology built successfully");
         } catch (Exception e) {
             log.error("Error building Kafka Streams topology", e);

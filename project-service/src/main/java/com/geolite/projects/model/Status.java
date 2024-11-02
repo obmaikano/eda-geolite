@@ -1,6 +1,8 @@
 package com.geolite.projects.model;
 
 public enum Status {
+    ARCHIVED,
+    DRAFT,
     INITIATED,
     STARTED,
     COMPLETED,

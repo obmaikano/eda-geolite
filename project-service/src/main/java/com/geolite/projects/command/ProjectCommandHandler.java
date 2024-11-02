@@ -8,6 +8,7 @@ import com.geolite.projects.model.Status;
 import com.geolite.projects.eventstore.EventStore;
 import com.geolite.projects.repository.ProjectRepository;
 import com.geolite.projects.util.ConversionUtil;
+import com.geolite.projects.util.ProjectValidator;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,16 +35,24 @@ public class ProjectCommandHandler {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
+    @Autowired
+    private ProjectValidator projectValidator;
+
     @Transactional
     public Project handleCreateProject(CreateProjectCommand command) {
 
-        Objects.requireNonNull(command.getProjectName(), "Project name cannot be empty.");
-        Objects.requireNonNull(command.getCommodity(), "Commodity cannot be empty.");
-        Objects.requireNonNull(command.getLocation(), "Location cannot be empty.");
-        Objects.requireNonNull(command.getStartDate(), "Start date cannot be empty.");
-        Objects.requireNonNull(command.getProjectLead(), "Project lead cannot be empty.");
-        Objects.requireNonNull(command.getDescription(), "Description cannot be empty.");
-        Objects.requireNonNull(command.getCreatedBy(), "Created by cannot be empty.");
+        Project project = new Project();
+        // Set project properties from command
+        project.setProjectName(command.getProjectName());
+        project.setLocation(command.getLocation());
+        project.setCommodity(command.getCommodity());
+        project.setStartDate(command.getStartDate());
+        project.setEndDate(command.getEndDate());
+        project.setDescription(command.getDescription());
+        project.setProjectLead(command.getProjectLead());
+
+        // Validate the project
+        projectValidator.validateNewProject(project);
 
         UUID projectId = UUID.randomUUID();
         UUID eventId = UUID.randomUUID();
@@ -65,8 +74,9 @@ public class ProjectCommandHandler {
 
         eventStore.saveEvent(event);
         publishEvent("project-created",event);
-        Project project = new Project();
+
         applyEvent(project, event);
+        
         log.info("Project created : {}", command.toString());
         return projectRepository.save(project);
     }
@@ -139,7 +149,7 @@ public class ProjectCommandHandler {
             project.setEndDate(ConversionUtil.longToDate(createdEvent.getEndDate()));
             project.setDescription(createdEvent.getDescription().toString());
             project.setProjectLead(createdEvent.getProjectLead().toString());
-            project.setStatus(Status.INITIATED);
+            project.setStatus(Status.DRAFT);
             project.setCreatedBy(createdEvent.getCreatedBy().toString());
             project.setCreatedDate(ConversionUtil.longToTimestamp(createdEvent.getCreatedDate()));
         } else if (event instanceof ProjectUpdatedEvent updatedEvent) {
